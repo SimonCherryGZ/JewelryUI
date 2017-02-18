@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">JewelryUI</string>
+
+    <string name="long_test_text">I am the bone of my sword.\nSteel is my body, and fire is my blood.\nI have created over a thousand blades.\nUnknown to Death.\nNor known to Life.\nHave withstood pain to create many weapons.\nYet, those hands will never hold anything.\nSo as I pray, unlimited blade works.I am the bone of my sword.\nSteel is my body, and fire is my blood.\nI have created over a thousand blades.\nUnknown to Death.\nNor known to Life.\nHave withstood pain to create many weapons.\nYet, those hands will never hold anything.\nSo as I pray, unlimited blade works.I am the bone of my sword.\nSteel is my body, and fire is my blood.\nI have created over a thousand blades.\nUnknown to Death.\nNor known to Life.\nHave withstood pain to create many weapons.\nYet, those hands will never hold anything.\nSo as I pray, unlimited blade works.I am the bone of my sword.\nSteel is my body, and fire is my blood.\nI have created over a thousand blades.\nUnknown to Death.\nNor known to Life.\nHave withstood pain to create many weapons.\nYet, those hands will never hold anything.\nSo as I pray, unlimited blade works.I am the bone of my sword.\nSteel is my body, and fire is my blood.\nI have created over a thousand blades.\nUnknown to Death.\nNor known to Life.\nHave withstood pain to create many weapons.\nYet, those hands will never hold anything.\nSo as I pray, unlimited blade works.I am the bone of my sword.\nSteel is my body, and fire is my blood.\nI have created over a thousand blades.\nUnknown to Death.\nNor known to Life.\nHave withstood pain to create many weapons.\nYet, those hands will never hold anything.\nSo as I pray, unlimited blade works.</string>
+
+    <string-array name="jazzy_effects">
+        <item>Standard</item>
+        <item>Tablet</item>
+        <item>CubeIn</item>
+        <item>CubeOut</item>
+        <item>FlipVertical</item>
+        <item>FlipHorizontal</item>
+        <item>Stack</item>
+        <item>ZoomIn</item>
+        <item>ZoomOut</item>
+        <item>RotateUp</item>
+        <item>RotateDown</item>
+        <item>Accordion</item>
+    </string-array>
+</resources>
