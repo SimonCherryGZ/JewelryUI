@@ -3,6 +3,7 @@ package simoncherry.jewelryui.activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -22,11 +23,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fivehundredpx.android.blur.BlurringView;
+import com.konifar.fab_transformation.FabTransformation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
     private JazzyViewPager vpModel;
     private ImageView ivBlur;
     private TextView tvName;
+
+    private FloatingActionButton floatingActionButton;
+    private RelativeLayout layoutContainer;
+    private RelativeLayout layoutFakeRipple;
 
     private ModelAdapter modelAdapter;
     private StackLayoutManager stackLayoutManager;
@@ -104,8 +111,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initBlur() {
         if (isBlur) {
-            //blurringView.setBlurredView(rvModel);
-            //blurringView.setBlurredView(vpModel);
             blurringView.setBlurredView(ivBlur);
             blurringView.setVisibility(View.VISIBLE);
             ivBlur.setVisibility(View.GONE);
@@ -123,18 +128,62 @@ public class MainActivity extends AppCompatActivity {
         vpModel = (JazzyViewPager) findViewById(R.id.vp_model);
         ivBlur = (ImageView) findViewById(R.id.iv_blur);
         tvName = (TextView) findViewById(R.id.tv_name);
+
+        floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
+        layoutContainer = (RelativeLayout) findViewById(R.id.layout_container);
+        layoutFakeRipple = (RelativeLayout) findViewById(R.id.layout_fake_ripple);
     }
 
     private void initView() {
         setSpannableText(ringName[1]);
+
+        layoutContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+    }
+
+    private void initFAB() {
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //changeJazzyEffect();
+                if (floatingActionButton.getVisibility() == View.VISIBLE) {
+                    FabTransformation.with(floatingActionButton)
+                            .setListener(new FabTransformation.OnTransformListener() {
+                                @Override
+                                public void onStartTransform() {
+                                    FabTransformation.with(floatingActionButton)
+                                            .transformTo(layoutContainer);
+                                }
+                                @Override
+                                public void onEndTransform() {
+                                }
+                            })
+                            .transformTo(layoutFakeRipple);
+
+//                    FabTransformation.with(floatingActionButton)
+//                            .transformTo(layoutFakeRipple);
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    FabTransformation.with(floatingActionButton)
+//                                            .transformTo(layoutContainer);
+//                                }
+//                            });
+//                        }
+//                    }, 50);
+                }
+            }
+        });
     }
 
     private void initRvRing(){
-//        circleLayoutManager = new CircleLayoutManager(this, true);
-//        circleZoomLayoutManager = new CircleZoomLayoutManager(this, true);
-//        scrollZoomLayoutManager = new ScrollZoomLayoutManager(this, Dp2px(0));
-//        galleryLayoutManager = new GalleryLayoutManager(this, Dp2px(10));
-
         rvRing.addOnScrollListener(new CenterScrollListener());
         circleZoomLayoutManager = new CircleZoomLayoutManager(this, true);
         rvRing.setLayoutManager(circleZoomLayoutManager);
@@ -155,11 +204,6 @@ public class MainActivity extends AppCompatActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 //Log.e(TAG, "onScrolled  x: " + String.valueOf(dx) + " | y: " + String.valueOf(dy));
-
-                //rvModel.scrollBy((int) (dx*adjustFactor), dy);
-//                if (isNeedAdjust) {
-//                    vpModel.scrollBy((int) (dx*adjustFactor), dy);
-//                }
 
                 if (isBlur) {
                     blurringView.invalidate();
@@ -271,17 +315,6 @@ public class MainActivity extends AppCompatActivity {
                 ViewParent parent1 = v.getParent();
                 parent1.requestDisallowInterceptTouchEvent(true); //不允许父类截断
                 return false;
-            }
-        });
-    }
-
-    private void initFAB() {
-        FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //determinLayoutManager();
-                changeJazzyEffect();
             }
         });
     }
@@ -440,7 +473,7 @@ public class MainActivity extends AppCompatActivity {
                 if (index <0 ) {
                     break;
                 } else {
-                    Log.e(TAG, "空格位置: " + String.valueOf(index));
+                    //Log.e(TAG, "空格位置: " + String.valueOf(index));
                     mList.add(index);
                     index++;
                 }
@@ -451,10 +484,33 @@ public class MainActivity extends AppCompatActivity {
         if (mList.size() > 0) {
             for (int i = 0; i < mList.size(); i++) {
                 int position = mList.get(i) + 1;
-                Log.e(TAG, "变更样式位置: " + String.valueOf(position));
+                //Log.e(TAG, "变更样式位置: " + String.valueOf(position));
                 spannable.setSpan(new RelativeSizeSpan(1.5f), position, position + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
         tvName.setText(spannable);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (floatingActionButton.getVisibility() != View.VISIBLE) {
+            FabTransformation.with(floatingActionButton)
+                    .transformFrom(layoutContainer);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            FabTransformation.with(floatingActionButton)
+                                    .transformFrom(layoutFakeRipple);
+                        }
+                    });
+                }
+            }, 100);
+
+            return;
+        }
+        super.onBackPressed();
     }
 }

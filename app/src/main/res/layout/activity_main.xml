@@ -203,6 +203,12 @@
 
     </simoncherry.jewelryui.custom.ObservableScrollView>
 
+    <include
+        layout="@layout/layout_fake_ripple" />
+
+    <include
+        layout="@layout/layout_check_out" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"

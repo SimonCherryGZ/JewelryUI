@@ -28,6 +28,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.1.1'
     compile 'com.android.support:design:25.1.1'
     compile project(path: ':customlayoutmanager')
+    compile project(':fab-transformation')
     compile 'com.github.florent37:arclayout:1.0.2'
     compile 'com.fivehundredpx:blurringview:1.0.0'
 }

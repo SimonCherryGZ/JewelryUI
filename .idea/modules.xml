@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/JewelryUI.iml" filepath="$PROJECT_DIR$/JewelryUI.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/customlayoutmanager/customlayoutmanager.iml" filepath="$PROJECT_DIR$/customlayoutmanager/customlayoutmanager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fab-transformation/fab-transformation.iml" filepath="$PROJECT_DIR$/fab-transformation/fab-transformation.iml" />
     </modules>
   </component>
 </project>
