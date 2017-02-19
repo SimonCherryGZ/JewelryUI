@@ -68,6 +68,23 @@
                     android:background="@android:color/white"/>
             </com.github.florent37.arclayout.ArcLayout>
 
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignTop="@+id/layout_arc"
+                android:layout_marginTop="60dp"
+                android:layout_marginLeft="65dp"
+                android:src="@drawable/ic_heart"/>
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignTop="@+id/layout_arc"
+                android:layout_marginTop="60dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="65dp"
+                android:src="@drawable/ic_buy"/>
+
             <simoncherry.jewelryui.custom.RecyclerViewPager
                 android:id="@+id/rv_ring"
                 android:layout_width="match_parent"
@@ -128,80 +145,27 @@
                 android:layout_alignTop="@+id/rv_ring"
                 android:layout_marginTop="370dp">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
-
-                    <TextView
-                        android:id="@+id/tv_title_width"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimaryLight"
-                        android:text="width: "/>
-
-                    <TextView
-                        android:id="@+id/tv_content_width"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/tv_title_width"
-                        android:layout_marginLeft="80dp"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:text="0.3cm"/>
-
-                    <TextView
-                        android:id="@+id/tv_title_weight"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_title_width"
-                        android:layout_marginTop="10dp"
-                        android:textColor="@color/colorPrimaryLight"
-                        android:text="weight: "/>
-
-                    <TextView
-                        android:id="@+id/tv_content_weight"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/tv_title_weight"
-                        android:layout_marginLeft="80dp"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:text="18.0g"/>
-
-                    <TextView
-                        android:id="@+id/tv_title_material"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_title_weight"
-                        android:layout_marginTop="10dp"
-                        android:textColor="@color/colorPrimaryLight"
-                        android:text="material: "/>
-
-                    <TextView
-                        android:id="@+id/tv_content_material"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/tv_title_material"
-                        android:layout_marginLeft="80dp"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:text="Rhinestones, Rose Gold plated Titanium"/>
-
-                    <TextView
-                        android:id="@+id/tv_title_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_title_material"
-                        android:layout_marginTop="35dp"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:text="@string/long_test_text"/>
-                </RelativeLayout>
-
+                <include
+                    layout="@layout/layout_detail" />
             </ScrollView>
 
         </RelativeLayout>
 
     </simoncherry.jewelryui.custom.ObservableScrollView>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="7.5dp"
+        android:layout_above="@+id/layout_tab"
+        android:scaleType="fitXY"
+        android:src="@drawable/tab_shadow"/>
+
+    <include
+        android:id="@+id/layout_tab"
+        layout="@layout/layout_tab"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"/>
 
     <include
         layout="@layout/layout_fake_ripple" />

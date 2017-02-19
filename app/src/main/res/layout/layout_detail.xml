@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <TextView
+        android:id="@+id/tv_title_width"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryLight"
+        android:text="width: "/>
+
+    <TextView
+        android:id="@+id/tv_content_width"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tv_title_width"
+        android:layout_marginLeft="80dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="0.3cm"/>
+
+    <TextView
+        android:id="@+id/tv_title_weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_title_width"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/colorPrimaryLight"
+        android:text="weight: "/>
+
+    <TextView
+        android:id="@+id/tv_content_weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tv_title_weight"
+        android:layout_marginLeft="80dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="18.0g"/>
+
+    <TextView
+        android:id="@+id/tv_title_material"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_title_weight"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/colorPrimaryLight"
+        android:text="material: "/>
+
+    <TextView
+        android:id="@+id/tv_content_material"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tv_title_material"
+        android:layout_marginLeft="80dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="Rhinestones, Rose Gold plated Titanium"/>
+
+    <TextView
+        android:id="@+id/tv_title_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_title_material"
+        android:layout_marginTop="35dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="@string/long_test_text"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_title_text"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="40dp">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_facebook"/>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_google"/>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_twitter"/>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_instagram"/>
+    </LinearLayout>
+</RelativeLayout>
