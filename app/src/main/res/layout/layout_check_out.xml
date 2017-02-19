@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:background="@android:color/white"
         android:visibility="invisible"
-        tools:visibility="invisible">
+        tools:visibility="visible">
 
         <TextView
             android:id="@+id/tv_title"
@@ -30,6 +30,16 @@
             android:layout_below="@+id/tv_title"
             android:layout_marginTop="20dp">
         </android.support.v7.widget.RecyclerView>
+
+        <com.dd.morphingbutton.MorphingButton
+            android:id="@+id/btn_pay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/rv_check_out"
+            android:layout_marginTop="100dp"
+            android:textColor="@android:color/white"
+            android:text="PAY"/>
     </RelativeLayout>
 
 </io.codetail.widget.RevealFrameLayout>

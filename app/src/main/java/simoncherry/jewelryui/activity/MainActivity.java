@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -27,6 +28,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dd.morphingbutton.MorphingButton;
 import com.fivehundredpx.android.blur.BlurringView;
 import com.konifar.fab_transformation.FabTransformation;
 
@@ -77,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
     private List<String> nameList;
     private List<String> priceList;
     private TextView tvTitle;
+    private MorphingButton btnPay;
 
     private CircleZoomLayoutManager circleZoomLayoutManager;
 
@@ -137,11 +140,12 @@ public class MainActivity extends AppCompatActivity {
         layoutFakeRipple = (RelativeLayout) findViewById(R.id.layout_fake_ripple);
         rvCheckOut = (RecyclerView) findViewById(R.id.rv_check_out);
         tvTitle = (TextView) findViewById(R.id.tv_title);
+        btnPay = (MorphingButton) findViewById(R.id.btn_pay);
     }
 
     private void initView() {
         setSpannableText(ringName[1]);
-
+        morphToCircle(btnPay);
         layoutContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -422,6 +426,7 @@ public class MainActivity extends AppCompatActivity {
                         addCheckOutItem(ringName2[2], ringPrice[2]);
                         addCheckOutItem(" ", " ");
                         addCheckOutItem("TOTAL", "$ 59,70");
+                        showPayBtn();
                     }
                     @Override
                     public void onAnimationRepeat(Animation animation) {
@@ -451,6 +456,86 @@ public class MainActivity extends AppCompatActivity {
         view.startAnimation(animationSet);
     }
 
+    private void showPayBtn() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //btnPay.setVisibility(View.VISIBLE);
+                //morphToSquare(btnPay, 200);
+                reboundIn(btnPay);
+            }
+        }, 200);
+    }
+
+    private void reboundIn(final View view) {
+        ScaleAnimation scaleBig = new ScaleAnimation(
+                0.0f, 1.2f, 0.0f, 1.2f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        scaleBig.setDuration(100);
+
+        final ScaleAnimation scaleSmall = new ScaleAnimation(
+                1.2f, 1.0f, 1.2f, 1.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        scaleSmall.setDuration(100);
+
+        scaleBig.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                view.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                view.startAnimation(scaleSmall);
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+
+        scaleSmall.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                morphToSquare(btnPay, 200);
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+
+        view.clearAnimation();
+        view.startAnimation(scaleBig);
+    }
+
+    private void morphToSquare(final MorphingButton btnMorph, int duration) {
+        MorphingButton.Params square = MorphingButton.Params.create()
+                .duration(duration)
+                .cornerRadius(Dp2px(56))
+                .width(Dp2px(200))
+                .height(Dp2px(56))
+                .color(getResources().getColor(R.color.colorPrimary))
+                .colorPressed(getResources().getColor(R.color.colorPrimaryDark))
+                .text("PAY");
+        btnMorph.morph(square);
+    }
+
+    private void morphToCircle(final MorphingButton btnMorph) {
+        btnMorph.setVisibility(View.INVISIBLE);
+        MorphingButton.Params circle = MorphingButton.Params.create()
+                .duration(1)
+                .cornerRadius(Dp2px(56))
+                .width(Dp2px(56))
+                .height(Dp2px(56))
+                .color(getResources().getColor(R.color.colorPrimary))
+                .colorPressed(getResources().getColor(R.color.colorPrimary))
+                .text("");
+        btnMorph.morph(circle);
+    }
+
     @Override
     public void onBackPressed() {
         if (floatingActionButton.getVisibility() != View.VISIBLE) {
@@ -461,6 +546,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         @Override
                         public void onEndTransform() {
+                            morphToCircle(btnPay);
                             tvTitle.setVisibility(View.INVISIBLE);
                             nameList.clear();
                         }

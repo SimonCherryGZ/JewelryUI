@@ -32,4 +32,5 @@ dependencies {
     compile 'com.github.florent37:arclayout:1.0.2'
     compile 'com.fivehundredpx:blurringview:1.0.0'
     compile 'jp.wasabeef:recyclerview-animators:2.2.5'
+    compile 'com.github.dmytrodanylyk:android-morphing-button:98a4986e56' // commit hash
 }
