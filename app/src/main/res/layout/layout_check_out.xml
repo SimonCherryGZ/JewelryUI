@@ -1,22 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <io.codetail.widget.RevealFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:id="@+id/layout_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
-        android:visibility="invisible">
+        android:visibility="invisible"
+        tools:visibility="invisible">
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
             android:textColor="@color/colorPrimary"
-            android:text="layout_check_out"/>
+            android:textSize="20sp"
+            android:text="Check Out"
+            android:visibility="invisible"/>
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_check_out"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_title"
+            android:layout_marginTop="20dp">
+        </android.support.v7.widget.RecyclerView>
     </RelativeLayout>
 
 </io.codetail.widget.RevealFrameLayout>

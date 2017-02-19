@@ -6,15 +6,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.Window;
 import android.view.WindowManager;
@@ -34,33 +33,35 @@ import com.konifar.fab_transformation.FabTransformation;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import simoncherry.customlayoutmanager.CenterScrollListener;
 import simoncherry.jewelryui.R;
+import simoncherry.jewelryui.adapter.CheckOutAdapter;
+import simoncherry.jewelryui.adapter.RingAdapter;
+import simoncherry.jewelryui.adapter.VpAdapter;
 import simoncherry.jewelryui.custom.ObservableScrollView;
-import simoncherry.jewelryui.custom.PagerAdapter;
 import simoncherry.jewelryui.custom.RecyclerViewPager;
 import simoncherry.jewelryui.custom.ViewPager;
 import simoncherry.jewelryui.jazzy.JazzyViewPager;
-import simoncherry.jewelryui.jazzy.OutlineContainer;
 import simoncherry.jewelryui.lm.CircleZoomLayoutManager;
-import simoncherry.jewelryui.lm.StackLayoutManager;
 
 
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getSimpleName();
 
-    private int[] ringResId = {R.drawable.ring1, R.drawable.ring2, R.drawable.ring3, R.drawable.ring4, R.drawable.ring5};
-    //private int[] modelResId = {R.drawable.hand1, R.drawable.hand2, R.drawable.hand3, R.drawable.hand4, R.drawable.hand5};
     private int[] modelResId = {R.drawable.model1, R.drawable.model2, R.drawable.model3, R.drawable.model4, R.drawable.model5};
     private String[] ringName = {
             "ROSE GOLD SWIRL\nCROSS OVER RING", "HEART BOUQUET RING\nIN ROSE GOLD", "PAVE HEART SWIRL\nSTRETCH RING",
             "HORSE STONE RING\nROSE GOLD", "ROSE GOLD\nCRYSTAL RING"};
+    private String[] ringName2 = {
+            "Rose Gold Swirl\nCross Over Ring", "Heart Bouquet Ring\nIn Rose Gold", "Pave Heart Swirl\nStretch Ring",
+            "Horse Stone Ring\nRose Gold", "Rose Gold\nCrystal Ring"};
+    private String[] ringPrice = {"$ 19,90", "$ 22,90", "$ 16,90"};
     private String[] effects;
     private int index = 6;
 
     private RecyclerViewPager rvRing;
-    private RecyclerView rvModel;
     private ObservableScrollView svContainer;
     private ScrollView svDetail;
     private BlurringView blurringView;
@@ -71,9 +72,12 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton floatingActionButton;
     private RelativeLayout layoutContainer;
     private RelativeLayout layoutFakeRipple;
+    private RecyclerView rvCheckOut;
+    private CheckOutAdapter coAdapter;
+    private List<String> nameList;
+    private List<String> priceList;
+    private TextView tvTitle;
 
-    private ModelAdapter modelAdapter;
-    private StackLayoutManager stackLayoutManager;
     private CircleZoomLayoutManager circleZoomLayoutManager;
 
     private boolean isBlur = true;
@@ -99,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         findView();
         initView();
         initRvRing();
-        initRvModel();
+        initRvCheckOut();
 
         effects = getResources().getStringArray(R.array.jazzy_effects);
         setupJazziness(JazzyViewPager.TransitionEffect.valueOf(effects[index]));
@@ -121,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void findView() {
         rvRing =(RecyclerViewPager)findViewById(R.id.rv_ring);
-        rvModel = (RecyclerView)findViewById(R.id.rv_model);
         svContainer = (ObservableScrollView) findViewById(R.id.sv_container);
         svDetail = (ScrollView) findViewById(R.id.sv_detail);
         blurringView = (BlurringView) findViewById(R.id.blurring);
@@ -132,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
         floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
         layoutContainer = (RelativeLayout) findViewById(R.id.layout_container);
         layoutFakeRipple = (RelativeLayout) findViewById(R.id.layout_fake_ripple);
+        rvCheckOut = (RecyclerView) findViewById(R.id.rv_check_out);
+        tvTitle = (TextView) findViewById(R.id.tv_title);
     }
 
     private void initView() {
@@ -156,6 +161,15 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onStartTransform() {
                                     FabTransformation.with(floatingActionButton)
+                                            .setListener(new FabTransformation.OnTransformListener() {
+                                                @Override
+                                                public void onStartTransform() {
+                                                }
+                                                @Override
+                                                public void onEndTransform() {
+                                                    showCheckOutItem();
+                                                }
+                                            })
                                             .transformTo(layoutContainer);
                                 }
                                 @Override
@@ -163,21 +177,6 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             })
                             .transformTo(layoutFakeRipple);
-
-//                    FabTransformation.with(floatingActionButton)
-//                            .transformTo(layoutFakeRipple);
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    FabTransformation.with(floatingActionButton)
-//                                            .transformTo(layoutContainer);
-//                                }
-//                            });
-//                        }
-//                    }, 50);
                 }
             }
         });
@@ -187,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         rvRing.addOnScrollListener(new CenterScrollListener());
         circleZoomLayoutManager = new CircleZoomLayoutManager(this, true);
         rvRing.setLayoutManager(circleZoomLayoutManager);
-        rvRing.setAdapter(new RingAdapter());
+        rvRing.setAdapter(new RingAdapter(this));
         rvRing.setSinglePageFling(true);
         rvRing.setTriggerOffset(0.1f);
         rvRing.setFlingFactor(0.3f);
@@ -228,18 +227,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void initRvModel() {
-        rvModel.addOnScrollListener(new CenterScrollListener());
-        stackLayoutManager = new StackLayoutManager(this);
-        rvModel.setLayoutManager(stackLayoutManager);
-        modelAdapter = new ModelAdapter();
-        rvModel.setAdapter(modelAdapter);
-    }
-
     private void setupJazziness(JazzyViewPager.TransitionEffect effect) {
         vpModel.setTransitionEffect(effect);
         vpModel.setFadeEnabled(true);
-        vpModel.setAdapter(new VpAdapter());
+        vpModel.setAdapter(new VpAdapter(this, vpModel));
         vpModel.setPageMargin(60);
 
         vpModel.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -250,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
 //                                ", positionOffset:" + String.valueOf(positionOffset) +
 //                                ", positionOffsetPixels:" + String.valueOf(positionOffsetPixels));
                 if (isBlur) {
-                    ivBlur.setImageResource(modelResId[(position+1)%5]);
+                    ivBlur.setImageResource(modelResId[position % modelResId.length]);
                     blurringView.invalidate();
                 }
             }
@@ -258,7 +249,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 Log.e("vpModel.onPageSelected", "position:" + String.valueOf(position));
-                //tvName.setText(ringName[(position+1)%5]);
                 showTextAnimation(position);
             }
 
@@ -319,6 +309,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void initRvCheckOut() {
+        rvCheckOut.setLayoutManager(new LinearLayoutManager(this));
+        rvCheckOut.setItemAnimator(new SlideInUpAnimator());
+        nameList = new ArrayList<>();
+        priceList = new ArrayList<>();
+        coAdapter = new CheckOutAdapter(this, nameList, priceList);
+        rvCheckOut.setAdapter(coAdapter);
+    }
+
     private void changeJazzyEffect() {
         index++;
         if (index > effects.length-1) {
@@ -331,93 +330,6 @@ public class MainActivity extends AppCompatActivity {
     private int Dp2px(float dp) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
-    }
-
-    class RingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new MyViewHolder(LayoutInflater.from(MainActivity.this).inflate(R.layout.item_ring,parent,false));
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            int index = (position+1)%5;
-            ((MyViewHolder)holder).imageView.setImageResource(ringResId[index]);
-        }
-
-        @Override
-        public int getItemCount() {
-            return 5;
-        }
-
-        class MyViewHolder extends RecyclerView.ViewHolder{
-            ImageView imageView;
-            public MyViewHolder(View itemView){
-                super(itemView);
-                imageView = (ImageView) itemView.findViewById(R.id.image);
-            }
-        }
-    }
-
-    class ModelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new MyViewHolder(LayoutInflater.from(MainActivity.this).inflate(R.layout.item_model,parent,false));
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            int index = (position+1)%5;
-            MyViewHolder myViewHolder = (MyViewHolder) holder;
-            myViewHolder.imageView.setImageResource(modelResId[index]);
-        }
-
-        @Override
-        public int getItemCount() {
-            return 5;
-        }
-
-        class MyViewHolder extends RecyclerView.ViewHolder{
-            ImageView imageView;
-            public MyViewHolder(View itemView){
-                super(itemView);
-                imageView = (ImageView) itemView.findViewById(R.id.image);
-            }
-        }
-    }
-
-    class VpAdapter extends PagerAdapter {
-
-        @Override
-        public int getCount() {
-            return modelResId.length;
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            if (view instanceof OutlineContainer) {
-                return ((OutlineContainer) view).getChildAt(0) == object;
-            } else {
-                return view == object;
-            }
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView(vpModel.findViewFromObject(position));
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            int index = (position+1)%5;
-            ImageView imageView = new ImageView(MainActivity.this);
-            imageView.setImageResource(modelResId[index]);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
-            container.addView(imageView);
-            vpModel.setObjectForPosition(imageView, position);
-            return imageView;
-        }
     }
 
     private void showTextAnimation(final int position) {
@@ -448,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void onAnimationEnd(Animation animation) {
-                setSpannableText(ringName[(position+1)%5]);
+                setSpannableText(ringName[position % ringName.length]);
                 tvName.startAnimation(animationSet2);
             }
             @Override
@@ -491,10 +403,68 @@ public class MainActivity extends AppCompatActivity {
         tvName.setText(spannable);
     }
 
+    private void addCheckOutItem(String name, String price) {
+        coAdapter.add(name.replace("\n", " "), price, coAdapter.getItemCount());
+    }
+
+    private void showCheckOutItem() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                slideInUp(tvTitle, new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        addCheckOutItem(ringName2[0], ringPrice[0]);
+                        addCheckOutItem(ringName2[1], ringPrice[1]);
+                        addCheckOutItem(ringName2[2], ringPrice[2]);
+                        addCheckOutItem(" ", " ");
+                        addCheckOutItem("TOTAL", "$ 59,70");
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+                });
+            }
+        }, 200);
+    }
+
+    private void slideInUp(View view, Animation.AnimationListener animationListener) {
+        AlphaAnimation fadeIn = new AlphaAnimation(0.0f, 1.0f);
+        TranslateAnimation transIn = new TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.0f);
+
+        final AnimationSet animationSet = new AnimationSet(true);
+        animationSet.addAnimation(fadeIn);
+        animationSet.addAnimation(transIn);
+        animationSet.setDuration(200);
+
+        if (animationListener != null) {
+            animationSet.setAnimationListener(animationListener);
+        }
+
+        view.setVisibility(View.VISIBLE);
+        view.clearAnimation();
+        view.startAnimation(animationSet);
+    }
+
     @Override
     public void onBackPressed() {
         if (floatingActionButton.getVisibility() != View.VISIBLE) {
             FabTransformation.with(floatingActionButton)
+                    .setListener(new FabTransformation.OnTransformListener() {
+                        @Override
+                        public void onStartTransform() {
+                        }
+                        @Override
+                        public void onEndTransform() {
+                            tvTitle.setVisibility(View.INVISIBLE);
+                            nameList.clear();
+                        }
+                    })
                     .transformFrom(layoutContainer);
             new Handler().postDelayed(new Runnable() {
                 @Override

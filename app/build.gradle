@@ -31,4 +31,5 @@ dependencies {
     compile project(':fab-transformation')
     compile 'com.github.florent37:arclayout:1.0.2'
     compile 'com.fivehundredpx:blurringview:1.0.0'
+    compile 'jp.wasabeef:recyclerview-animators:2.2.5'
 }
